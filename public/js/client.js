@@ -225,7 +225,10 @@
       btn.className = 'clue';
       btn.style.left = el.x + '%';
       btn.style.top = el.y + '%';
-      btn.title = '';
+      // camouflage: random tilt and size so clues read as part of the scenery
+      var rot = (Math.random() * 56 - 28).toFixed(1);
+      var scale = (0.65 + Math.random() * 0.5).toFixed(2);
+      btn.style.transform = 'translate(-50%,-50%) rotate(' + rot + 'deg) scale(' + scale + ')';
       btn.innerHTML = '<svg viewBox="0 0 24 24">' + item.icon + '</svg>';
       btn.addEventListener('click', function (ev) {
         ev.stopPropagation();
@@ -253,7 +256,7 @@
     var btn = clueEls[data.elementId];
     if (btn) {
       btn.classList.add('found', 'just-found');
-      btn.style.opacity = '0.18';
+      btn.style.opacity = '0.15';
       btn.style.filter = 'grayscale(1)';
       var tag = document.createElement('div');
       tag.className = 'found-tag';
@@ -261,6 +264,7 @@
       tag.style.top = btn.style.top;
       tag.innerHTML = '<b>' + esc(data.byName) + '</b> · ' + esc(data.name) + ' +' + data.points;
       $('found-layer').appendChild(tag);
+      setTimeout(function () { tag.remove(); }, 3700); // CSS fades it out at 3.5s
     }
     $('remaining').textContent = data.remaining;
     renderScoreboard(data.scores);

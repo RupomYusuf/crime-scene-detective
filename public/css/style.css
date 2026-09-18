@@ -185,15 +185,15 @@ input[type=range] { width: 100%; accent-color: var(--gold); }
 #elements-layer, #found-layer, #click-ripple-layer { position: absolute; inset: 0; }
 #found-layer, #click-ripple-layer { pointer-events: none; }
 
-/* hidden clue elements */
+/* hidden clue elements — deliberately camouflaged into the scenery */
 .clue {
   position: absolute; width: 4.2%; min-width: 34px; aspect-ratio: 1;
   transform: translate(-50%, -50%); border: none; background: none; cursor: pointer;
-  padding: 0; opacity: .5; filter: saturate(.65) brightness(.82);
-  transition: opacity .25s, filter .25s;
+  padding: 0; opacity: .34; filter: saturate(.45) brightness(.8);
+  transition: filter .4s; pointer-events: auto;
 }
-.clue svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,.55)); }
-.clue:hover { opacity: .85; filter: saturate(1) brightness(1); }
+.clue svg { width: 100%; height: 100%; display: block; }
+/* no hover reveal — sweeping the pointer must not find clues for you */
 .clue.found { pointer-events: none; }
 .clue.hinted { opacity: 1; filter: none; animation: hintGlow 1s infinite; border-radius: 50%; }
 @keyframes hintGlow {
@@ -206,13 +206,15 @@ input[type=range] { width: 100%; accent-color: var(--gold); }
   40% { transform: translate(-50%,-50%) scale(1.6); }
   100% { transform: translate(-50%,-50%) scale(1); }
 }
-/* found marker tag */
+/* found marker tag — brief flash, then fades away to keep the scene readable */
 .found-tag {
   position: absolute; transform: translate(-50%, -110%); pointer-events: none;
   background: rgba(20,24,32,.92); border: 1px solid var(--gold-dim); color: var(--text);
   font-size: 11px; padding: 3px 8px; border-radius: 6px; white-space: nowrap; z-index: 5;
+  animation: tagLife 3.5s forwards;
 }
 .found-tag b { color: var(--gold); }
+@keyframes tagLife { 0%, 60% { opacity: 1; } 100% { opacity: 0; } }
 /* wrong-click ripple */
 .ripple {
   position: absolute; width: 44px; height: 44px; border-radius: 50%;
