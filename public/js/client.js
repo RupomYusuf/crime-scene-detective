@@ -226,8 +226,8 @@
       btn.style.left = el.x + '%';
       btn.style.top = el.y + '%';
       // camouflage: random tilt and size so clues read as part of the scenery
-      var rot = (Math.random() * 56 - 28).toFixed(1);
-      var scale = (0.65 + Math.random() * 0.5).toFixed(2);
+      var rot = (Math.random() * 80 - 40).toFixed(1);
+      var scale = (0.55 + Math.random() * 0.65).toFixed(2);
       btn.style.transform = 'translate(-50%,-50%) rotate(' + rot + 'deg) scale(' + scale + ')';
       btn.innerHTML = '<svg viewBox="0 0 24 24">' + item.icon + '</svg>';
       btn.addEventListener('click', function (ev) {
