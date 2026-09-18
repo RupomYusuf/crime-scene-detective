@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crime Scene Detective</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='10.5' cy='10' r='6' fill='none' stroke='%23d8b04a' stroke-width='2'/%3E%3Cpath d='M15 14.8 L20.6 20.4' stroke='%23d8b04a' stroke-width='3'/%3E%3C/svg%3E">
+</head>
+<body>
+<div id="vignette"></div>
+
+<!-- ============ HOME ============ -->
+<section id="screen-home" class="screen active">
+  <div class="home-wrap">
+    <div class="title-block">
+      <svg class="title-mag" viewBox="0 0 24 24" width="72" height="72"><circle cx="10.5" cy="10" r="6" fill="rgba(191,224,239,.25)" stroke="#d8b04a" stroke-width="1.6"/><path d="M15 14.8 L20.6 20.4" stroke="#d8b04a" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <h1>CRIME SCENE<br><span>DETECTIVE</span></h1>
+      <p class="tagline">Scan the scene. Spot the clues. Beat your rivals to the evidence.</p>
+    </div>
+    <div class="home-card">
+      <label>Your detective name</label>
+      <input id="name-input" maxlength="16" placeholder="e.g. Sherlock" autocomplete="off">
+      <div class="home-actions">
+        <button id="btn-create" class="btn primary">Create a Case Room</button>
+        <div class="join-row">
+          <input id="join-code" maxlength="4" placeholder="CODE" autocomplete="off">
+          <button id="btn-join" class="btn">Join Room</button>
+        </div>
+      </div>
+      <div id="home-error" class="error-text"></div>
+    </div>
+    <div class="home-stats" id="home-stats"></div>
+  </div>
+</section>
+
+<!-- ============ LOBBY ============ -->
+<section id="screen-lobby" class="screen">
+  <header class="topbar">
+    <div class="brand">🔍 CRIME SCENE DETECTIVE</div>
+    <div class="room-code-box">ROOM <span id="lobby-code">----</span>
+      <button id="btn-copy-code" class="mini-btn" title="Copy invite code">Copy</button>
+    </div>
+    <button id="btn-leave-lobby" class="btn danger small">Leave</button>
+  </header>
+  <div class="lobby-grid">
+    <div class="lobby-col">
+      <div class="panel">
+        <h3>Detectives <span id="lobby-count" class="badge">1/4</span></h3>
+        <ul id="player-list" class="player-list"></ul>
+        <button id="btn-ready" class="btn primary wide">Ready Up</button>
+        <button id="btn-start" class="btn go wide hidden">Start Investigation</button>
+        <div id="lobby-hint" class="muted small-text"></div>
+      </div>
+      <div class="panel chat-panel">
+        <h3>Case Chat</h3>
+        <div id="lobby-chat" class="chat-log"></div>
+        <form id="lobby-chat-form" class="chat-form">
+          <input id="lobby-chat-input" maxlength="200" placeholder="Say something…" autocomplete="off">
+          <button class="btn small">Send</button>
+        </form>
+      </div>
+    </div>
+    <div class="lobby-col" id="settings-col">
+      <div class="panel">
+        <h3>Case Settings <span class="muted small-text" id="settings-readonly-tag">(host only)</span></h3>
+        <div class="setting-row">
+          <label>Scenario</label>
+          <select id="set-scenario"></select>
+        </div>
+        <div class="setting-row presets">
+          <label>Difficulty</label>
+          <div class="preset-btns">
+            <button data-preset="easy" class="btn chip">Easy 5–8</button>
+            <button data-preset="medium" class="btn chip">Medium 10–15</button>
+            <button data-preset="hard" class="btn chip">Hard 20+</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label>Hidden elements <span id="set-count-val" class="val">10</span></label>
+          <input type="range" id="set-count" min="5" max="25" value="10">
+        </div>
+        <div class="setting-row">
+          <label>Time limit <span id="set-duration-val" class="val">5 min</span></label>
+          <input type="range" id="set-duration" min="2" max="10" value="5">
+        </div>
+        <div class="setting-row">
+          <label>Point multiplier <span id="set-multiplier-val" class="val">×1</span></label>
+          <input type="range" id="set-multiplier" min="0.5" max="3" step="0.5" value="1">
+        </div>
+        <div class="setting-row toggle-row">
+          <label class="switch-label"><input type="checkbox" id="set-hints" checked> Allow hints (−15 pts, cooldown)</label>
+        </div>
+        <div class="setting-row toggle-row">
+          <label class="switch-label"><input type="checkbox" id="set-wrongclicks" checked> Penalize wrong clicks (−5 pts)</label>
+        </div>
+        <div class="rules-box">
+          <strong>How scoring works</strong>
+          <ul>
+            <li>First finder 100 · then 80 · 60 · 40 (× multiplier)</li>
+            <li>Wrong clicks cost points — no spray &amp; pray!</li>
+            <li>Hints reveal one clue, for you only, at a cost</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GAME ============ -->
+<section id="screen-game" class="screen">
+  <header class="topbar game-topbar">
+    <div class="brand small">🔍 <span id="game-scenario">Crime Scene</span></div>
+    <div class="timer-box" id="timer-box">⏱ <span id="timer">5:00</span></div>
+    <div class="remaining-box"><span id="remaining">10</span> clues left</div>
+    <button id="btn-hint" class="btn hint-btn">💡 Hint (−15)</button>
+    <button id="btn-leave-game" class="btn danger small">Abandon</button>
+  </header>
+  <div class="game-grid">
+    <div class="scene-col">
+      <div id="scene" class="scene">
+        <svg id="scene-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"></svg>
+        <div id="elements-layer"></div>
+        <div id="found-layer"></div>
+        <div id="click-ripple-layer"></div>
+      </div>
+      <div id="toasts" class="toasts"></div>
+    </div>
+    <aside class="side-col">
+      <div class="panel scoreboard-panel">
+        <h3>Detectives</h3>
+        <ul id="game-scoreboard" class="scoreboard"></ul>
+      </div>
+      <div class="panel feed-panel">
+        <h3>Field Report</h3>
+        <div id="game-log" class="chat-log"></div>
+        <form id="game-chat-form" class="chat-form">
+          <input id="game-chat-input" maxlength="200" placeholder="Discuss the case…" autocomplete="off">
+          <button class="btn small">Send</button>
+        </form>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section id="screen-results" class="screen">
+  <div class="results-wrap">
+    <h1 id="results-title">Case Closed</h1>
+    <p id="results-sub" class="muted"></p>
+    <div class="results-grid">
+      <div class="panel">
+        <h3>Final Scores</h3>
+        <ul id="results-scores" class="scoreboard big"></ul>
+      </div>
+      <div class="panel">
+        <h3>Evidence Timeline</h3>
+        <ul id="results-timeline" class="timeline"></ul>
+      </div>
+    </div>
+    <div class="results-actions">
+      <button id="btn-play-again" class="btn primary hidden">Back to Lobby (host)</button>
+      <button id="btn-results-home" class="btn">Leave Room</button>
+    </div>
+  </div>
+</section>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/scenarios.js"></script>
+<script src="js/client.js"></script>
+</body>
+</html>

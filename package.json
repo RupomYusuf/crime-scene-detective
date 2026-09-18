@@ -1,0 +1,18 @@
+{
+  "name": "crime-scene-detective",
+  "version": "1.0.0",
+  "description": "Real-time multiplayer detective game: find randomized hidden clues before your rivals (2-4 players).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/e2e.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1",
+    "socket.io": "^4.8.3"
+  }
+}
